@@ -115,6 +115,8 @@ class DiscordBotHandler {
 
 class AllowedUses {
 
+    // To enable perm limiting, create "perms.json" file in working directory.
+
     channels: string[] = []
     users: string[] = []
     roles: string[] = []
