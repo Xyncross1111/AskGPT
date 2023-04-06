@@ -108,9 +108,9 @@ class DiscordBotHandler {
             console.log(`                      ${command.name}`)
         }
 
-        await this.restClient.put(Routes.applicationCommands(Constants.DISCORD_CLIENT_ID), { body: Object.values(hashSet) })
+        await this.restClient.put(Routes.applicationGuildCommands(Constants.DISCORD_CLIENT_ID, Constants.GUILD_ID), { body: Object.values(hashSet) })
     }
 }
 
-export const Bot = new DiscordBotHandler()
-Bot.initialize()
+export const bot = new DiscordBotHandler()
+bot.initialize()

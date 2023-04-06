@@ -4,12 +4,13 @@ import { RESTPostAPIApplicationCommandsJSONBody } from 'discord-api-types'
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { Constants } from '../constants'
 import { AskGPTService } from '../services/askGPTService'
+import { bot } from '..'
   
-export default class AskGPTCommand implements Command {
+export default class ChatGPTCommand implements Command {
     getCommandMetadata(): RESTPostAPIApplicationCommandsJSONBody {
         return new SlashCommandBuilder()
-            .setName('askgpt')
-            .setDescription('Generate a response for prompt from GPT 3.5 .')
+            .setName('chatgpt')
+            .setDescription('Start a conversation with ChatGPT.')
             .addStringOption( option => (
                 option
                     .setName('prompt')
@@ -52,5 +53,11 @@ export default class AskGPTCommand implements Command {
         } else {
             await interaction.editReply(<string> response)
         }
+
+        setTimeout( () => {
+            bot.client.removeAllListeners('messageCreate')
+        }, 20 * 60 * 1000)
+
+        await gptApiService.continueConversation(interaction)
     }
 }

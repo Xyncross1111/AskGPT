@@ -1,9 +1,11 @@
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai'
 import { Constants } from '../constants'
 import { CommandInteraction, CacheType } from 'discord.js';
-import { Bot } from '..';
+import { bot } from '..';
 
 export class AskGPTService {
+
+    time = Date.now()
 
     config = new Configuration ({
         organization: Constants.OPENAI_ORG,
@@ -52,26 +54,35 @@ export class AskGPTService {
 
     async continueConversation(interaction: CommandInteraction<CacheType>) {
 
-        Bot.client.on('messageCreate', async message => {
+        bot.client.on('messageCreate', async message => {
 
-            if (message.author.id === interaction.user.id && message.channel.id === interaction.channel?.id && message.mentions.users.first() == Bot.client.user) {
+            if (message.author.id === interaction.user.id && message.channel.id === interaction.channel?.id && message.mentions.users.first() == bot.client.user) {
 
-                if (message.content == `<@${Bot.client.user.id}> stop`) {
+                if (message.content == `<@${bot.client.user.id}> stop`) {
+
+                    message.reply('Ending Conversation, thanks for talking to me!')
                     
-                    Bot.client.removeAllListeners('messageCreate')
+                    bot.client.removeAllListeners('messageCreate')
                     return
                 }
                 
                 const newPrompt: ChatCompletionRequestMessage = {
                     'role' : 'user',
-                    'content' : message.content.substring(22)
+                    'content' : message.content.substring(23)
                 }
     
-                const response = await this.getGPTResponse(newPrompt)
+                const response = await this.getGPTResponse(newPrompt) as string
 
                 console.log('Conversation History', this.conversationHistory)
-    
-                message.reply(<string> response)
+
+                if ( response?.length > 2000 ) {
+
+                    message.reply(response?.substring(0, 1999))
+                    message.channel.send(response.substring(1999))
+
+                } else {
+                    message.reply(<string> response)
+                }
                      
             }
         })
