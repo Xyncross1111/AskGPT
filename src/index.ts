@@ -70,10 +70,10 @@ class DiscordBotHandler {
                     try {
                         if (interaction.replied || interaction.deferred) {
 
-                            await interaction.editReply({ embeds: [{ title: 'Error', description: error.message }] })
+                            await interaction.editReply({ embeds: [{ title: 'Error', description: error.message, color: 'RED' }] })
                         } else {
 
-                            await interaction.reply({ embeds: [{ title: 'Error', description: error.message }], ephemeral: true })
+                            await interaction.reply({ embeds: [{ title: 'Error', description: error.message, color: 'RED' }], ephemeral: true })
                         }
                     } catch (err: any) {
 
@@ -111,8 +111,6 @@ class DiscordBotHandler {
 
         if (!Constants.GUILD_ID) await this.restClient.put(Routes.applicationCommands(Constants.DISCORD_CLIENT_ID), { body: Object.values(hashSet) })
         else await this.restClient.put(Routes.applicationGuildCommands(Constants.DISCORD_CLIENT_ID, Constants.GUILD_ID), { body: Object.values(hashSet) })
-
-
     }
 }
 
