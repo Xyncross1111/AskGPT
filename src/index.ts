@@ -109,11 +109,14 @@ class DiscordBotHandler {
             console.log(`                      ${command.name}`)
         }
 
-        await this.restClient.put(Routes.applicationGuildCommands(Constants.DISCORD_CLIENT_ID, Constants.GUILD_ID), { body: Object.values(hashSet) })
+        if (!Constants.GUILD_ID) await this.restClient.put(Routes.applicationCommands(Constants.DISCORD_CLIENT_ID), { body: Object.values(hashSet) })
+        else await this.restClient.put(Routes.applicationGuildCommands(Constants.DISCORD_CLIENT_ID, Constants.GUILD_ID), { body: Object.values(hashSet) })
+
+
     }
 }
 
-class AllowedUses {
+class Permissions {
 
     // To enable perm limiting, create "perms.json" file in working directory.
 
@@ -171,5 +174,5 @@ class AllowedUses {
 export const bot = new DiscordBotHandler()
 bot.initialize()
 
-export const perms = new AllowedUses()
+export const perms = new Permissions()
 perms.loadVariables()
