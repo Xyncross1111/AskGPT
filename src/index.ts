@@ -1,6 +1,7 @@
 import { REST } from '@discordjs/rest'
 import { RESTPatchAPIApplicationCommandJSONBody, Routes } from 'discord-api-types/v9'
-import { Client, Intents } from 'discord.js'
+import { Client, CommandInteraction, GuildMember, Intents } from 'discord.js'
+import fs from 'fs'
 import { Constants } from './constants'
 import { CommandService } from './services/commandService'
 import { IAutocompletableCommand, IExecutableCommand } from './commands/command'
@@ -112,5 +113,65 @@ class DiscordBotHandler {
     }
 }
 
+class AllowedUses {
+
+    channels: string[] = []
+    users: string[] = []
+    roles: string[] = []
+
+    loadVariables() {
+
+        if (!fs.existsSync('./perms.json')) return
+
+        const file = fs.readFileSync("./perms.json", "utf8")
+
+        console.log('file found')
+
+        const jsonFile = JSON.parse(file)
+
+        this.channels = jsonFile.channels
+        this.users = jsonFile.users
+        this.roles = jsonFile.roles
+
+        console.log(this)
+    }
+
+    permCheck(interaction: CommandInteraction) {
+
+        let result: boolean = false
+
+        if (this.channels.length !== 0) {
+
+            this.channels.forEach( channel => {
+
+                if ( interaction.channel?.id === channel ) result = true; return result
+            })
+        }
+
+        if ( this.users.length !== 0 ) {
+
+            this.users.forEach( user => {
+
+                if ( interaction.user.id === user ) result = true; return result
+            })
+        }
+
+        if ( this.roles.length !== 0 ) {
+
+            this.roles.forEach( role => {
+
+                if ((<GuildMember> interaction.member)?.roles.cache.has(role) ) result = true; return result
+            })
+        }
+
+        return result
+    }
+
+}
+
+
 export const bot = new DiscordBotHandler()
 bot.initialize()
+
+export const perms = new AllowedUses()
+perms.loadVariables()

@@ -1,11 +1,11 @@
 .env
 .p8
+perms.json
 
 # compiled output
 dist
 lib
 node_modules
-
 
 # Logs
 logs

@@ -1,10 +1,10 @@
 import { CommandInteraction, CacheType, TextBasedChannel } from 'discord.js'
-import { Command } from './command'
 import { RESTPostAPIApplicationCommandsJSONBody } from 'discord-api-types'
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { Constants } from '../constants'
+
+import { Command } from './command'
 import { AskGPTService } from '../services/askGPTService'
-import { bot } from '..'
+import { bot, perms } from '..'
   
 export default class ChatGPTCommand implements Command {
     getCommandMetadata(): RESTPostAPIApplicationCommandsJSONBody {
@@ -28,8 +28,7 @@ export default class ChatGPTCommand implements Command {
 
     async execute(interaction: CommandInteraction<CacheType>): Promise<void> {
 
-        if (interaction.channel?.id !== '1028139004153040937' && interaction.user.id !== Constants.OWNER_ID && interaction.user.id !== '743608980865286195')
-        return
+        if (!perms.permCheck(interaction)) return
 
         await interaction.deferReply()
 

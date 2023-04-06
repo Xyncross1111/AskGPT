@@ -73,7 +73,7 @@ export class AskGPTService {
     
                 const response = await this.getGPTResponse(newPrompt) as string
 
-                console.log('Conversation History', this.conversationHistory)
+                // console.log('Conversation History', this.conversationHistory)
 
                 if ( response?.length > 2000 ) {
 
