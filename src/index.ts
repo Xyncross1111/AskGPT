@@ -125,15 +125,11 @@ class AllowedUses {
 
         const file = fs.readFileSync("./perms.json", "utf8")
 
-        console.log('file found')
-
         const jsonFile = JSON.parse(file)
 
         this.channels = jsonFile.channels
         this.users = jsonFile.users
         this.roles = jsonFile.roles
-
-        console.log(this)
     }
 
     permCheck(interaction: CommandInteraction) {
